@@ -1,0 +1,110 @@
+{%- set pools = [] -%}
+{%- set selectors = [] -%}
+
+{%- if SWAN_SERVER_NET4 -%}
+    {% set _ = pools.append('mpool4') -%}
+    {% set _ = selectors.append('0.0.0.0/0') -%}
+{%- endif -%}
+
+{%- if SWAN_SERVER_NET6 -%}
+    {%- set _ = pools.append('mpool6') -%}
+    {%- set _ = selectors.append('::/0') -%}
+{%- endif -%}
+
+connections {
+    myvpn1 {
+        local {
+            auth = pubkey
+            certs = server.crt
+            id = {{ PUBLIC_DNS_NAME }}
+        }
+        remote {
+            auth = eap-tls
+            # revocation = strict
+            eap_id = %any
+        }
+        children {
+            net1 {
+                inactivity = 20s
+                local_ts = {{ selectors | join(', ') }}
+
+                # everything goes over vpn
+                # local_ts  = 0.0.0.0/0, ::/0
+
+                # only this goes over vpn
+                #local_ts  = 192.168.0.0/24, 192.168.0.0/24
+
+                # esp: sha1 is deprecated, but windows
+                esp_proposals = aes256-sha256-modp2048-modpnone,aes256-sha256-sha384-sha512-prfsha256-prfsha384-prfsha512-modp2048-modp3072-modp4096-modp6144-modp8192-ecp256-ecp384-ecp521-ecp256bp-ecp384bp-ecp512bp-curve25519-curve448,aes256-sha256,aes256-sha1
+
+                updown = /etc/vpn/updown.sh
+            }
+        }
+        version = 2
+        send_cert = always
+        dpd_delay = 30s
+        unique = never
+
+        # ike:  modp1024 and modp1536 are deprecated, but windows
+        proposals = aes256-sha256-sha384-sha512-prfsha256-prfsha384-prfsha512-modp1024-modp1536-modp2048-modp3072-modp4096-modp6144-modp8192-ecp256-ecp384-ecp521-ecp256bp-ecp384bp-ecp512bp-curve25519-curve448
+
+        pools = {{ pools | join(', ') }}
+    }
+
+
+    myvpn2 {
+        local {
+            auth = pubkey
+            certs = server.crt
+            id = {{ PUBLIC_DNS_NAME }}
+        }
+        remote {
+            auth = pubkey
+            # revocation = strict
+            # eap_id = %any
+        }
+        children {
+            net1 {
+                inactivity = 20s
+                local_ts = {{ selectors | join(', ') }}
+
+                # everything goes over vpn
+                #local_ts  = 0.0.0.0/0, ::/0
+
+                # only this goes over vpn
+                #local_ts  = 192.168.0.0/24, 192.168.0.0/24
+
+                # esp: sha1 is deprecated, but windows
+                esp_proposals = aes256-sha256-modp2048-modpnone,aes256-sha256-sha384-sha512-prfsha256-prfsha384-prfsha512-modp2048-modp3072-modp4096-modp6144-modp8192-ecp256-ecp384-ecp521-ecp256bp-ecp384bp-ecp512bp-curve25519-curve448,aes256-sha256,aes256-sha1
+
+                updown = /etc/vpn/updown.sh
+            }
+        }
+        version = 2
+        send_cert = always
+        dpd_delay = 30s
+        unique = never
+
+        # ike:  modp1024 and modp1536 are deprecated, but windows
+        proposals = aes256-sha256-sha384-sha512-prfsha256-prfsha384-prfsha512-modp1024-modp1536-modp2048-modp3072-modp4096-modp6144-modp8192-ecp256-ecp384-ecp521-ecp256bp-ecp384bp-ecp512bp-curve25519-curve448
+
+        pools = {{ pools | join(', ') }}
+    }
+}
+
+
+pools {
+{%- if SWAN_SERVER_NET4 %}
+  mpool4 {
+    addrs = {{ SWAN_SERVER_NET4 | iplib_last_minus_dhcp_block_addr }} - {{ SWAN_SERVER_NET4 | iplib_last_addr }}
+    dns = {{ SWAN_SERVER_NET4 | iplib_first_addr }}
+  }
+{%- endif %}
+
+{%- if SWAN_SERVER_NET6 %}
+  mpool6 {
+    addrs = {{ SWAN_SERVER_NET6 | iplib_last_minus_dhcp_block_addr }} - {{ SWAN_SERVER_NET6 | iplib_last_addr }}
+    dns = {{ SWAN_SERVER_NET6 | iplib_first_addr }}
+  }
+{%- endif %}
+}

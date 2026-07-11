@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<title>{{ WEB_VPN_ZONE }} server</title>
+<style>
+    body {
+        font-family: "Segoe UI", system-ui, Arial, sans-serif;
+    }    
+    table {
+        border-collapse: collapse;
+        width: 500px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .table_title {
+        background-color: #f8f9fa;
+        color: #333333;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        padding: 12px;
+        border: 1px solid #dee2e6;
+    }
+
+    .table_header th {
+        background-color: #e9ecef;
+        color: #212529;
+        font-weight: bold;
+        text-align: right;
+        padding: 10px 12px;
+        border: 1px solid #dee2e6;
+    }
+
+    .table_row1 {
+        background-color: #e8e9ea;
+    }
+
+    .table_row2 {
+        background-color: #ffffff;
+    }
+
+    .table_row1 td,
+    .table_row2 td {
+        border: 1px solid #dee2e6;
+        text-align: right;
+        padding: 9px 12px;
+    }
+
+    td {
+        border: 1px solid #dee2e6;
+        text-align: right;
+        padding: 9px 12px;
+    }
+</style>
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+    const rawTs = {{ WEB_DNS_TS | tojson }};
+    const theTs = rawTs ? new Date(rawTs) : null;
+
+    const rawTable = {{ WEB_TABLE | tojson }};
+    const theTable = rawTable ? rawTable : null;
+
+    document.getElementById("dns_ts").textContent = theTs ? theTs.toLocaleString() : "ERROR";
+    document.getElementById("dns_table").innerHTML = theTable ? theTable : "<th colspan=\"4\" class=\"table_title\">NO RECORDS</th>";
+    document.querySelectorAll("#dns_table .iso-time").forEach(td => {
+        const dt = new Date(td.textContent);
+        if (!isNaN(dt.getTime())) {
+            td.textContent = dt.toLocaleString();
+        }
+    });
+});
+
+</script>
+</head>
+<body>
+
+<table>
+    <tr>
+        <th colspan="4" class="table_title">DNS read: <span id="dns_ts"></span></th>
+    </tr>
+    <tbody id="dns_table"></tbody>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,181 @@
+ns.{{ VPN_DNS_ZONE }}.:
+
+{%- if OVPN_STRONG_NET4 %}
+  - net: {{ OVPN_STRONG_NET4 }}
+    A: {{ OVPN_STRONG_NET4 | iplib_first_addr }}
+
+    {%- if OVPN_STRONG_NET6 %}
+    AAAA: {{ OVPN_STRONG_NET6 | iplib_first_addr }}
+    {%- endif %}
+{%- endif %}
+
+{%- if OVPN_STRONG_NET6 %}
+
+  - net: {{ OVPN_STRONG_NET6 }}
+    {%- if OVPN_STRONG_NET4 %}
+    A: {{ OVPN_STRONG_NET4 | iplib_first_addr }}
+    {%- endif %}
+    AAAA: {{ OVPN_STRONG_NET6 | iplib_first_addr }}
+{%- endif %}
+
+{%- if OVPN_COMPAT_NET4 %}
+
+
+  - net: {{ OVPN_COMPAT_NET4 }}
+    A: {{ OVPN_COMPAT_NET4 | iplib_first_addr }}
+
+    {%- if OVPN_COMPAT_NET6 %}
+    AAAA: {{ OVPN_COMPAT_NET6 | iplib_first_addr }}
+    {%- endif %}
+{%- endif %}
+
+{%- if OVPN_COMPAT_NET6 %}
+
+  - net: {{ OVPN_COMPAT_NET6 }}
+    {%- if OVPN_COMPAT_NET4 %}
+    A: {{ OVPN_COMPAT_NET4 | iplib_first_addr }}
+    {%- endif %}
+    AAAA: {{ OVPN_COMPAT_NET6 | iplib_first_addr }}
+{%- endif %}
+
+{%- if SWAN_SERVER_NET4 %}
+
+
+  - net: {{ SWAN_SERVER_NET4 }}
+    A: {{ SWAN_SERVER_NET4 | iplib_first_addr }}
+
+    {%- if SWAN_SERVER_NET6 %}
+    AAAA: {{ SWAN_SERVER_NET6 | iplib_first_addr }}
+    {%- endif %}
+{%- endif %}
+
+{%- if SWAN_SERVER_NET6 %}
+
+  - net: {{ SWAN_SERVER_NET6 }}
+    {%- if SWAN_SERVER_NET4 %}
+    A: {{ SWAN_SERVER_NET4 | iplib_first_addr }}
+    {%- endif %}
+    AAAA: {{ SWAN_SERVER_NET6 | iplib_first_addr }}
+{%- endif %}
+
+
+{{ VPN_DNS_ZONE }}.{{ VPN_DNS_ZONE }}.:
+
+{%- if OVPN_STRONG_NET4 %}
+  - net: {{ OVPN_STRONG_NET4 }}
+    A: {{ OVPN_STRONG_NET4 | iplib_first_addr }}
+
+    {%- if OVPN_STRONG_NET6 %}
+    AAAA: {{ OVPN_STRONG_NET6 | iplib_first_addr }}
+    {%- endif %}
+{%- endif %}
+
+{%- if OVPN_STRONG_NET6 %}
+
+  - net: {{ OVPN_STRONG_NET6 }}
+    {%- if OVPN_STRONG_NET4 %}
+    A: {{ OVPN_STRONG_NET4 | iplib_first_addr }}
+    {%- endif %}
+    AAAA: {{ OVPN_STRONG_NET6 | iplib_first_addr }}
+{%- endif %}
+
+{%- if OVPN_COMPAT_NET4 %}
+
+
+  - net: {{ OVPN_COMPAT_NET4 }}
+    A: {{ OVPN_COMPAT_NET4 | iplib_first_addr }}
+
+    {%- if OVPN_COMPAT_NET6 %}
+    AAAA: {{ OVPN_COMPAT_NET6 | iplib_first_addr }}
+    {%- endif %}
+{%- endif %}
+
+{%- if OVPN_COMPAT_NET6 %}
+
+  - net: {{ OVPN_COMPAT_NET6 }}
+    {%- if OVPN_COMPAT_NET4 %}
+    A: {{ OVPN_COMPAT_NET4 | iplib_first_addr }}
+    {%- endif %}
+    AAAA: {{ OVPN_COMPAT_NET6 | iplib_first_addr }}
+{%- endif %}
+
+{%- if SWAN_SERVER_NET4 %}
+
+
+  - net: {{ SWAN_SERVER_NET4 }}
+    A: {{ SWAN_SERVER_NET4 | iplib_first_addr }}
+
+    {%- if SWAN_SERVER_NET6 %}
+    AAAA: {{ SWAN_SERVER_NET6 | iplib_first_addr }}
+    {%- endif %}
+{%- endif %}
+
+{%- if SWAN_SERVER_NET6 %}
+
+  - net: {{ SWAN_SERVER_NET6 }}
+    {%- if SWAN_SERVER_NET4 %}
+    A: {{ SWAN_SERVER_NET4 | iplib_first_addr }}
+    {%- endif %}
+    AAAA: {{ SWAN_SERVER_NET6 | iplib_first_addr }}
+{%- endif %}
+
+
+{{ VPN_DNS_ZONE }}.:
+
+{%- if OVPN_STRONG_NET4 %}
+  - net: {{ OVPN_STRONG_NET4 }}
+    A: {{ OVPN_STRONG_NET4 | iplib_first_addr }}
+
+    {%- if OVPN_STRONG_NET6 %}
+    AAAA: {{ OVPN_STRONG_NET6 | iplib_first_addr }}
+    {%- endif %}
+{%- endif %}
+
+{%- if OVPN_STRONG_NET6 %}
+
+  - net: {{ OVPN_STRONG_NET6 }}
+    {%- if OVPN_STRONG_NET4 %}
+    A: {{ OVPN_STRONG_NET4 | iplib_first_addr }}
+    {%- endif %}
+    AAAA: {{ OVPN_STRONG_NET6 | iplib_first_addr }}
+{%- endif %}
+
+{%- if OVPN_COMPAT_NET4 %}
+
+
+  - net: {{ OVPN_COMPAT_NET4 }}
+    A: {{ OVPN_COMPAT_NET4 | iplib_first_addr }}
+
+    {%- if OVPN_COMPAT_NET6 %}
+    AAAA: {{ OVPN_COMPAT_NET6 | iplib_first_addr }}
+    {%- endif %}
+{%- endif %}
+
+{%- if OVPN_COMPAT_NET6 %}
+
+  - net: {{ OVPN_COMPAT_NET6 }}
+    {%- if OVPN_COMPAT_NET4 %}
+    A: {{ OVPN_COMPAT_NET4 | iplib_first_addr }}
+    {%- endif %}
+    AAAA: {{ OVPN_COMPAT_NET6 | iplib_first_addr }}
+{%- endif %}
+
+{%- if SWAN_SERVER_NET4 %}
+
+
+  - net: {{ SWAN_SERVER_NET4 }}
+    A: {{ SWAN_SERVER_NET4 | iplib_first_addr }}
+
+    {%- if SWAN_SERVER_NET6 %}
+    AAAA: {{ SWAN_SERVER_NET6 | iplib_first_addr }}
+    {%- endif %}
+{%- endif %}
+
+{%- if SWAN_SERVER_NET6 %}
+
+  - net: {{ SWAN_SERVER_NET6 }}
+    {%- if SWAN_SERVER_NET4 %}
+    A: {{ SWAN_SERVER_NET4 | iplib_first_addr }}
+    {%- endif %}
+    AAAA: {{ SWAN_SERVER_NET6 | iplib_first_addr }}
+{%- endif %}

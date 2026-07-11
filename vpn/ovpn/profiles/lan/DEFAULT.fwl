@@ -1,0 +1,8 @@
+# Options:
+#   NAT
+#   NAT4
+#   NAT6
+#   ALLOWNET net/mask
+#   ALLOWNET "inet"
+
+ALLOWNET 192.168.99.0/24

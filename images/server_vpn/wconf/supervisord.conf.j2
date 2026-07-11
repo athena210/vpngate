@@ -1,0 +1,97 @@
+[supervisord]
+nodaemon=true
+logfile=/dev/stdout
+logfile_maxbytes=0
+user=root
+
+
+[unix_http_server]
+file = /run/supervisord.sock
+
+[supervisorctl]
+serverurl=unix:///run/supervisord.sock
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+
+# [group:group1]
+# programs=ovpn-strong,ovpn-compat,strongswan
+
+[program:knot-dns]
+command=knotd -c /etc/knot/knot.conf
+priority=10
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+autorestart=true
+startretries=0
+
+
+{% if OVPN_STRONG_NET4 %}
+[program:ovpn-strong]
+command=sh -c "sleep 5; openvpn --status /vpnstat/server-strong.status --status-version 2 --suppress-timestamps --config /etc/vpn/server-strong.conf --writepid /run/ovpn-strong.pid 2>&1 | sed 's/^/[strong] /'"
+priority=20
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+autorestart=true
+startretries=0
+{% endif %}
+
+{% if OVPN_COMPAT_NET4 %}
+[program:ovpn-compat]
+command=sh -c "sleep 5; openvpn --status /vpnstat/server-compat.status --status-version 2 --suppress-timestamps --config /etc/vpn/server-compat.conf --writepid /run/ovpn-compat.pid 2>&1 | sed 's/^/[compat] /'"
+priority=20
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+autorestart=true
+startretries=0
+{% endif %}
+
+
+{% if ( SWAN_SERVER_NET4 or SWAN_SERVER_NET6 ) and PUBLIC_DNS_NAME %}
+[program:charon]
+command=sh -c "/usr/lib/strongswan/charon 2>&1 | sed 's/^/[strongswan] /'"
+priority=10
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+autorestart=true
+startretries=0
+
+[program:swanctl]
+command=sh -c "while true; do while [ ! -S /run/charon.vici ]; do sleep 5; done; swanctl --load-all || echo SWANCTL-LOAD-ERROR; sleep 3600; done"
+priority=20
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+autorestart=true
+startretries=0
+{% endif %}
+
+[program:flask]
+command=sh -c "sleep 5; cd /flask && flask --app app run"
+priority=20
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+autorestart=true
+startretries=0
+
+[program:nginx]
+command=nginx -c /etc/nginx.conf -g 'daemon off;'
+priority=20
+autorestart=true
+stdout_logfile=/dev/stdout
+stderr_logfile=/dev/stderr
+stdout_logfile_maxbytes=0
+stderr_logfile_maxbytes=0
+startretries=0
