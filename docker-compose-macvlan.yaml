@@ -1,0 +1,55 @@
+# macvlan based external network
+#
+# docker network create -d macvlan \
+#   --subnet=192.168.0.0/24 \
+#   --gateway=192.168.0.1 \
+#   -o parent=vlan63-b \
+#   vlan63-net
+
+networks:
+  net1:
+    internal: true
+  vlan63-net:
+    name: vlan63-net
+    external: true
+
+
+services:
+
+  server_vpn:
+    pull_policy: never
+    image: server_vpn:${SERVER_VPN_VERSION:-none}
+    container_name: server_vpn
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      - net.ipv6.conf.all.forwarding=1
+      - net.ipv6.conf.default.forwarding=1
+    devices:
+      - "/dev/net/tun:/dev/net/tun"
+    networks:
+      net1:
+      vlan63-net:
+        ipv4_address: $NET_IP_SERVER_VPN
+    environment:
+      - VPN_DNS_ZONE=$VPN_DNS_ZONE
+      - PUBLIC_DNS4=${PUBLIC_DNS4:-}
+      - PUBLIC_DNS6=${PUBLIC_DNS6:-}
+      - PUBLIC_STRONG_PORT=${PUBLIC_STRONG_PORT:-}
+      - PUBLIC_COMPAT_PORT=${PUBLIC_COMPAT_PORT:-}
+      - OVPN_STRONG_NET4=${OVPN_STRONG_NET4:-}
+      - OVPN_COMPAT_NET4=${OVPN_COMPAT_NET4:-}
+      - SWAN_SERVER_NET4=${SWAN_SERVER_NET4:-}
+      - OVPN_STRONG_NET6=${OVPN_STRONG_NET6:-}
+      - OVPN_COMPAT_NET6=${OVPN_COMPAT_NET6:-}
+      - SWAN_SERVER_NET6=${SWAN_SERVER_NET6:-}
+      - PUBLIC_DNS_NAME=${PUBLIC_DNS_NAME:-}
+    hostname: server_vpn
+    dns:
+      - 127.0.0.1
+      - ::1
+    volumes:
+      - ./pki:/pki:r
+      - ./vpn:/vpn:r
+      - ./stat:/vpnstat

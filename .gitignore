@@ -1,0 +1,4 @@
+/pki/*
+/stat/*
+/images_backup/*
+/.env

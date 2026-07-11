@@ -1,0 +1,97 @@
+server:
+  listen: 0.0.0.0@53
+  listen: ::@53
+  user: knot:knot
+
+log:
+  - target: stdout
+    any: info
+
+database:
+    storage: /var/lib/knot
+
+remote:
+  - id: upstream_resolvers
+{%- if PUBLIC_DNS4 %}
+    address: {{ PUBLIC_DNS4 }}
+{%- endif %}
+{%- if PUBLIC_DNS6 %}
+    address: {{ PUBLIC_DNS6 }}
+{%- endif %}
+
+mod-dnsproxy:
+  - id: default
+    remote: upstream_resolvers
+    address: 127.0.0.1
+    address: ::1
+{%- if OVPN_STRONG_NET4 %}
+    address: {{ OVPN_STRONG_NET4 }}
+{%- endif %}
+{%- if OVPN_STRONG_NET6 %}
+    address: {{ OVPN_STRONG_NET6 }}
+{%- endif %}
+{%- if OVPN_COMPAT_NET4 %}
+    address: {{ OVPN_COMPAT_NET4 }}
+{%- endif %}
+{%- if OVPN_COMPAT_NET6 %}
+    address: {{ OVPN_COMPAT_NET6 }}
+{%- endif %}
+{%- if SWAN_SERVER_NET4 %}
+    address: {{ SWAN_SERVER_NET4 }}
+{%- endif %}
+{%- if SWAN_SERVER_NET6 %}
+    address: {{ SWAN_SERVER_NET6 }}
+{%- endif %}
+
+mod-geoip:
+  - id: default
+    config-file: /etc/knot/knot-split.conf
+    mode: subnet
+
+template:
+  - id: default
+    global-module: mod-dnsproxy/default
+    zonefile-load: difference-no-serial
+    journal-content: all
+    zonefile-sync: 5s
+
+zone:
+  - domain: {{ VPN_DNS_ZONE }}
+    file: main.zone
+    module: mod-geoip/default
+
+{%- if OVPN_STRONG_NET4 %}
+
+  - domain: {{ OVPN_STRONG_NET4 | iplib_ptr }}
+    file: ovpn-strong.ptr4.zone
+{%- endif %}
+
+{%- if OVPN_COMPAT_NET4 %}
+
+  - domain: {{ OVPN_COMPAT_NET4 | iplib_ptr }}
+    file: ovpn-compat.ptr4.zone
+{%- endif %}
+
+{%- if OVPN_STRONG_NET6 %}
+
+  - domain: {{ OVPN_STRONG_NET6 | iplib_ptr }}
+    file: ovpn-strong.ptr6.zone
+{%- endif %}
+
+{%- if OVPN_COMPAT_NET6 %}
+
+  - domain: {{ OVPN_COMPAT_NET6 | iplib_ptr }}
+    file: ovpn-compat.ptr6.zone
+{%- endif %}
+
+{%- if SWAN_SERVER_NET4 %}
+
+  - domain: {{ SWAN_SERVER_NET4 | iplib_ptr }}
+    file: swan-server.ptr4.zone
+{%- endif %}
+
+{%- if SWAN_SERVER_NET6 %}
+
+  - domain: {{ SWAN_SERVER_NET6 | iplib_ptr }}
+    file: swan-server.ptr6.zone
+{%- endif %}

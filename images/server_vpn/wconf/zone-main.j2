@@ -1,0 +1,20 @@
+$ORIGIN {{ VPN_DNS_ZONE }}.
+$TTL 300
+
+@ IN SOA ns.{{ VPN_DNS_ZONE }}. admin.{{ VPN_DNS_ZONE }}. (
+    {{ VPN_DNS_ZONE_SERIAL }} ; serial
+    300        ; refresh
+    120        ; retry
+    86400      ; expire
+    60         ; minimum
+)
+
+@   IN  NS    ns
+ns  IN  A     127.0.0.1
+ns  IN  AAAA  ::1
+
+{{ VPN_DNS_ZONE }}  IN  A     127.0.0.1
+{{ VPN_DNS_ZONE }}  IN  AAAA  ::1
+
+@   IN  A     127.0.0.1
+@   IN  AAAA  ::1

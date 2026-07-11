@@ -1,0 +1,9 @@
+# Options:
+#   NAT
+#   NAT4
+#   NAT6
+#   ALLOWNET net/mask
+#   ALLOWNET "inet"
+
+NAT
+ALLOWNET inet

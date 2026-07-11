@@ -1,0 +1,9 @@
+#!/bin/sh
+
+SWAN_SERVER_NET4="{{ SWAN_SERVER_NET4 }}"
+SWAN_SERVER_NET6="{{ SWAN_SERVER_NET6 }}"
+
+export SWAN_SERVER_NET4
+export SWAN_SERVER_NET6
+
+exec /usr/bin/env python3 /etc/vpn/helper.py "$@"
