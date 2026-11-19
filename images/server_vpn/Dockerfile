@@ -1,9 +1,16 @@
-FROM alpine:3.23
+# alpine    - pip libknot - openvpn
+# 3.23      - 3.5.10      - 6.20
+
+ARG \
+    ALPINE_VER=3.23
+
+FROM alpine:${ALPINE_VER:-latest}
 
 ARG \
     WD=none \
     IMAGE_NAME=none \
-    IMAGE_TAG=none
+    IMAGE_TAG=none \
+    LIBKNOT_PIP_VER=3.5.10
 
 
 RUN \
@@ -21,7 +28,7 @@ RUN \
         strongswan \
         python3 \
         py3-pip &&\
-    pip install pydantic jinjanator pip-nftables libknot flask --break-system-packages &&\
+    pip install pydantic jinjanator pip-nftables "libknot==${LIBKNOT_PIP_VER}" flask --break-system-packages &&\
     apk del py3-pip
 
 

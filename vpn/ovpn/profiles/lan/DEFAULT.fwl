@@ -5,4 +5,4 @@
 #   ALLOWNET net/mask
 #   ALLOWNET "inet"
 
-ALLOWNET 192.168.99.0/24
+# ALLOWNET 192.168.99.0/24
