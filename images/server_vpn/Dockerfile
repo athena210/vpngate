@@ -1,8 +1,8 @@
-# alpine    - pip libknot
-# 3.24      - 3.5.10
+# alpine    - pip libknot - openvpn
+# 3.23      - 3.5.10      - 6.20
 
 ARG \
-    ALPINE_VER=3.24
+    ALPINE_VER=3.23
 
 FROM alpine:${ALPINE_VER:-latest}
 
