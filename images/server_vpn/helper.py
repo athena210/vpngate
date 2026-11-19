@@ -970,7 +970,9 @@ def learn_address(ctx: VpnContext) -> int:
         and (ctx.learn_cmd == "add" or ctx.learn_cmd == "update")
     ) or (ctx.is_swan and ctx.pluto_verb and (ctx.pluto_verb.startswith("up-client"))):
         # ADD
-        res += firewall_clean_rules(ctx)
+        # res += firewall_clean_rules(ctx)
+        firewall_clean_rules(ctx)
+        dns_delete_by_ip(ctx)
         if ctx.is_ovpn:
             res += ovpn_firewall_apply_rules(ctx)
         elif ctx.is_swan:
